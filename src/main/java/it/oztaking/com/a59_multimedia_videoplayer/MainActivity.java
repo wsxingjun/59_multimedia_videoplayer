@@ -14,6 +14,7 @@ import java.io.IOException;
 public class MainActivity extends AppCompatActivity {
 
     private MediaPlayer mediaPlayer;
+    private int currentpostion;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onPrepared(MediaPlayer mp) {
                         mediaPlayer.start();
+                        mediaPlayer.seekTo(currentpostion);
                     }
                 });
 
@@ -51,7 +53,11 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void surfaceDestroyed(SurfaceHolder holder) {
-                mediaPlayer.stop();
+                if (mediaPlayer != null && mediaPlayer.isPlaying()){
+
+                    currentpostion = mediaPlayer.getCurrentPosition();
+                    mediaPlayer.stop();
+                }
 
             }
         });
