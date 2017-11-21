@@ -13,6 +13,7 @@ import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
+    private MediaPlayer mediaPlayer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,11 +22,12 @@ public class MainActivity extends AppCompatActivity {
         SurfaceView sfv = (SurfaceView) findViewById(R.id.sfv);
 //        surfaceHolder维护播放视频的内容
         final SurfaceHolder holder = sfv.getHolder();
-        final MediaPlayer mediaPlayer = new MediaPlayer();
-        new Thread(new Runnable() {
+
+
+        holder.addCallback(new SurfaceHolder.Callback() {
             @Override
-            public void run() {
-                SystemClock.sleep(200);
+            public void surfaceCreated(SurfaceHolder holder) {
+                 mediaPlayer = new MediaPlayer();
                 try {
                     mediaPlayer.setDataSource("/storage/sdcard/cc.mp4");
                     mediaPlayer.setDisplay(holder);
@@ -33,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
                 mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                     @Override
                     public void onPrepared(MediaPlayer mp) {
@@ -42,7 +43,28 @@ public class MainActivity extends AppCompatActivity {
                 });
 
             }
-        }).start();
+
+            @Override
+            public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+
+            }
+
+            @Override
+            public void surfaceDestroyed(SurfaceHolder holder) {
+                mediaPlayer.stop();
+
+            }
+        });
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                SystemClock.sleep(200);
+//
+//
+//            }
+//        }).start();
+
+
 
 
     }
